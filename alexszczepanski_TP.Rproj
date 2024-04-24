@@ -1,13 +1,21 @@
-Version: 1.0
+library(tidyverse)
+library(lmtest)
+library(sandwich)
+library(lmtest)
+library(openxlsx)
 
-RestoreWorkspace: Default
-SaveWorkspace: Default
-AlwaysSaveHistory: Default
+setwd("C:/Users/alexs/OneDrive - Binghamton University/econometrics")
+apparentcorr1 <- read.xlsx('alexszczepanski_tp.xlsx')
 
-EnableCodeIndexing: Yes
-UseSpacesForTab: Yes
-NumSpacesForTab: 2
-Encoding: UTF-8
+reg1 <- lm(CorPerc ~ GiniCoe + GDPtot + pop + democ + mrkease + redtape + investments + fempart, data = apparentcorr1 )
+summary(reg1)
+res1 <- resid(reg1)
 
-RnwWeave: Sweave
-LaTeX: pdfLaTeX
+bptest(reg1)
+coeftest(reg1, vcov = vcovHC(reg1, type='HC'))
+reg2 <- lm(CorPerc ~ GiniCoe + GDPtot + pop + democ + mrkease + redtape + investments + fempart + curcrisis, data = apparentcorr1 )
+summary(reg2)
+bptest(reg2)
+coeftest(reg2, vcov = vcovHC(reg2, type='HC'))
+
+
